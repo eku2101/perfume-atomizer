@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Explore the states and controls of an interchangeable perfume atomizer. A classroom simulation with visible variables and transitions.">
+  <title>Perfume Atomizer State Lab</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="model.js" defer></script><script src="app.js" defer></script>
+</head>
+<body>
+<header class="masthead"><a href="#main" class="wordmark"><span class="mark">◌</span> ATOMIZER <span class="wordmark-light">/ STATE LAB</span></a><span class="eyebrow">MSTU 5013 · INTERACTIVE DOODLE</span></header>
+<main id="main">
+  <section class="intro"><div><p class="eyebrow">ONE HEAD. DIFFERENT BOTTLES.</p><h1>A little pressure.<br>A deliberate response.</h1><p class="lead">Explore how a reusable perfume head responds to touch, a changing press, and a bottle swap.</p></div><div class="intro-note"><span class="tiny-dot"></span><strong>A model you can question</strong><p>Dose is shown in simulation units, not milliliters. The controls stand in for physical sensors.</p><a href="#learn">See the thinking behind it ↓</a></div></section>
+  <section class="lab" aria-label="Interactive atomizer">
+    <aside class="panel setup-panel">
+      <div class="section-heading"><span class="step">01</span><h2>Fit the head</h2></div>
+      <p class="muted">Choose the parts while detached. Adapter A and B are illustrative model options.</p>
+      <fieldset id="parts"><legend class="sr-only">Bottle and attachment parts</legend>
+        <label for="bottle">Bottle shape<select id="bottle"><option value="round">Round perfume · adapter A · short tube</option><option value="tall">Tall cologne · adapter B · long tube</option></select></label>
+        <div class="two-fields"><label for="adapter">Neck adapter<select id="adapter"><option value="A">Adapter A</option><option value="B">Adapter B</option></select></label><label for="tube">Dip tube<select id="tube"><option value="short">Short</option><option value="long">Long</option></select></label></div>
+        <label class="check"><input id="gasket" type="checkbox"><span>Gasket fitted and seal checked</span></label>
+        <label class="check"><input id="path-ready" type="checkbox"><span>Tube fitted and fluid path ready</span></label>
+      </fieldset>
+      <button id="attachment" class="button secondary">Attach head</button>
+      <button id="confirm" class="button primary" disabled>Confirm setup</button>
+      <p class="small">The attachment signal does not prove a seal. Here, those physical checks are represented by your confirmations.</p>
+    </aside>
+    <section class="panel experience">
+      <div class="section-heading"><span class="step">02</span><h2>Try a press</h2><span id="state-badge" class="badge">Detached</span></div>
+      <div class="bottle-scene" id="scene" aria-hidden="true">
+        <div class="spray"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="device-head"><div class="led-ring"></div><div class="top-button"></div><div class="nozzle"></div><div class="mini-selector"></div></div>
+        <div class="neck"></div><div class="bottle-body"><div class="liquid"></div><div class="dip-tube"></div><span class="bottle-label">EAU<br><small>MODEL NO. 01</small></span></div>
+        <div class="floor-shadow"></div>
+      </div>
+      <div class="dose-readout"><span><strong id="volume">0.0</strong> <small id="volume-label">units delivered</small></span><span id="target-label">Target 60</span></div>
+      <progress id="dose-progress" max="60" value="0" aria-label="Dose progress"></progress>
+      <label class="dose-label" for="dose">Selected dose<select id="dose"><option value="30">Light · 30 units</option><option value="60" selected>Medium · 60 units</option><option value="90">Full · 90 units</option></select></label>
+      <label class="range-label" for="depth"><span>Simulated press depth</span><output id="depth-value" for="depth">55%</output></label>
+      <input id="depth" type="range" min="0" max="100" value="55">
+      <div class="range-key"><span>Touch</span><span>Deeper press</span></div>
+      <label class="dose-label" for="speed">Press speed setting<select id="speed"><option value="0.8">Slow</option><option value="1" selected>Steady</option><option value="1.2">Quick</option></select></label>
+      <button id="press" class="press-button" aria-describedby="press-help" aria-pressed="false"><span>Hold to mist</span><small>Release to stop</small></button>
+      <p id="press-help" class="small center">Mouse or touch: press and hold. Keyboard: focus here and hold Space or Enter. Start depth is 20%.</p>
+      <label class="check touch-check"><input id="touch-only" type="checkbox"><span>Touch only, without pressing</span></label>
+    </section>
+    <aside class="panel inspector">
+      <div class="section-heading"><span class="step">03</span><h2>Notice the change</h2></div>
+      <div id="status" class="status-message" role="status" aria-live="polite">Choose a bottle and parts, then attach the head.</div>
+      <dl class="metrics"><div><dt>Pump</dt><dd id="pump">OFF</dd></div><div><dt>Flow</dt><dd id="flow">0.0 u/s</dd></div><div><dt>Pump time</dt><dd id="elapsed">0.0 s</dd></div><div><dt>Hard cap</dt><dd>100 units</dd></div><div><dt>Setup</dt><dd id="setup-value">Not confirmed</dd></div></dl>
+      <details class="test-controls"><summary>Try an edge case</summary>
+        <label class="check"><input id="held-test" type="checkbox"><span>Keep the press signal held</span></label>
+        <p class="small">Use this to detach and reattach while the input is still on.</p>
+        <label class="check"><input id="over-limit" type="checkbox"><span>Request 120 units on the next cycle</span></label>
+        <label class="check"><input id="sensor-fault" type="checkbox"><span>Simulate a sensor fault</span></label>
+        <button id="reset-fault" class="button secondary">Reset fault</button>
+      </details>
+      <h3>Transition journal</h3><ol id="journal" class="journal"></ol>
+    </aside>
+  </section>
+  <section id="learn" class="learning">
+    <div><p class="eyebrow">THE QUESTION</p><h2>Can a slow press tell us<br>what someone wants?</h2><p>It can describe an input. It cannot tell us whether a person wants more fragrance or is simply hesitant. This model separates the gesture, the selected dose, and the rules for stopping.</p><p>Try releasing early, holding past completion, or removing the head. Watch the journal to see what the system knows and which rule wins.</p></div>
+    <div class="concept"><a href="assets/interchangeable-concept.png" target="_blank" rel="noopener"><img src="assets/interchangeable-concept.png" width="1536" height="1024" alt="Concept sketch of a reusable atomizer head, neck adapters, gasket and fitted dip tube, shown on perfume and cologne bottles"></a><p class="small">Design inspiration · AI-generated concept, not a manufactured device.</p></div>
+  </section>
+  <details class="code-guide"><summary>How the code connects to the interaction</summary><div class="guide-grid"><div><h3>Variables remember</h3><p><code>state</code>, <code>attached</code>, <code>setupValid</code>, <code>pressed</code>, <code>delivered</code>, and <code>targetDose</code> describe the model right now.</p></div><div><h3>Events report actions</h3><p><code>pointerdown</code> starts a press. <code>pointerup</code> releases it. A <code>change</code> event updates a selection. Keyboard events provide the same press interaction.</p></div><div><h3>Conditions decide</h3><p><code>if</code> checks attachment, setup, input stability, time, and volume. Holding the button never overrides a completed dose or a fault.</p></div></div></details>
+  <p class="scope-note">Simulation scope: bottle compatibility is predefined; pressure and speed are inputs, not measured forces. Pump flow is an illustrative formula. Residual mist, real seals, cleaning, and hardware failure are not physically modeled. The 0.25-second stopping state is visual feedback with zero modeled flow.</p>
+</main>
+<footer>Built to explore a state machine · No account, storage, or physical device connection</footer>
+</body></html>

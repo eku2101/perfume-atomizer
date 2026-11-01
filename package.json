@@ -1,0 +1,10 @@
+{
+  "name": "perfume-atomizer-state-lab",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A buildless HTML CSS JavaScript appliance state-machine model.",
+  "scripts": {
+    "test": "node --test tests/model.test.cjs"
+  }
+}
+

@@ -1,0 +1,6 @@
+node_modules/
+qa/
+.openai/
+.env
+.env.*
+*.tar.gz
