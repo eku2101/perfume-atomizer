@@ -4,6 +4,13 @@ const $ = function (id) { return document.getElementById(id); };
 const pressSources = new Set();
 let lastJournal = "";
 let lastMessage = "";
+// A stable particle field avoids randomness or DOM creation in the animation loop.
+for (let i = 0; i < 36; i++) {
+  const drop = document.createElement("i");
+  drop.style.setProperty("--fan", String((i % 9 - 4) / 4));
+  drop.style.setProperty("--delay", (-i * 0.073) + "s");
+  $("spray").append(drop);
+}
 const pretty = function (value) { return value.replaceAll("_", " ").replace(/^./, function (c) { return c.toUpperCase(); }); };
 function syncPress() { model.setPressed(pressSources.size > 0); render(); }
 function setSource(source, active) { if (active) pressSources.add(source); else pressSources.delete(source); syncPress(); }
@@ -128,6 +135,20 @@ function render() {
     (["touch_sensing", "press_engaged"].includes(model.state) ? " sensing" : "") +
     (model.faultLatched ? " error" : "");
   $("scene").style.setProperty("--glow", Math.min(360, model.delivered / activeTarget * 360) + "deg");
+  const intensity = model.depth / 100;
+  $("scene").style.setProperty("--throw", (45 + intensity * 95) + "px");
+  $("scene").style.setProperty("--spread", (12 + intensity * 44) + "px");
+  $("scene").style.setProperty("--mist-opacity", String(0.25 + intensity * 0.5));
+  $("scene").style.setProperty("--mist-duration", (1.2 / model.speed) + "s");
+  const spraying = model.state === "atomizing" && model.flow > 0;
+  const sprayText = spraying
+    ? "Spraying · " + model.depth + "% depth · " + (model.depth < 40 ? "gentle, narrow mist" : model.depth < 75 ? "medium mist" : "full, wide mist")
+    : model.state === "dose_complete" ? "Dose complete · release before spraying again."
+    : !model.setupValid ? "Load a ready-to-try example or complete setup to spray."
+    : model.depth < 20 ? "Set depth to 20% or more to start the spray."
+    : "Hold to mist · preview at " + model.depth + "% depth";
+  if ($("spray-feedback").textContent !== sprayText) $("spray-feedback").textContent = sprayText;
+  pressButton.querySelector("span").textContent = spraying ? "Spraying… release to stop" : "Hold to mist";
   const journalString = JSON.stringify(model.log);
   if (journalString !== lastJournal) {
     $("journal").replaceChildren();

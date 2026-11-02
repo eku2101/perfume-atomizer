@@ -30,12 +30,6 @@
     </aside>
     <section class="panel experience">
       <div class="section-heading"><span class="step">02</span><h2>Try a press</h2><span id="state-badge" class="badge">Detached</span></div>
-      <div class="bottle-scene" id="scene" aria-hidden="true">
-        <div class="spray"><i></i><i></i><i></i><i></i><i></i></div>
-        <div class="device-head"><div class="led-ring"></div><div class="top-button"></div><div class="nozzle"></div><div class="mini-selector"></div></div>
-        <div class="neck"></div><div class="bottle-body"><div class="liquid"></div><div class="dip-tube"></div><span class="bottle-label">EAU<br><small>MODEL NO. 01</small></span></div>
-        <div class="floor-shadow"></div>
-      </div>
       <div class="dose-readout"><span><strong id="volume">0.0</strong> <small id="volume-label">units delivered</small></span><span id="target-label">Target 60</span></div>
       <progress id="dose-progress" max="60" value="0" aria-label="Dose progress"></progress>
       <label class="dose-label" for="dose">Selected dose<select id="dose"><option value="30">Light · 30 units</option><option value="60" selected>Medium · 60 units</option><option value="90">Full · 90 units</option></select></label>
@@ -43,6 +37,14 @@
       <input id="depth" type="range" min="0" max="100" value="55">
       <div class="range-key"><span>Touch</span><span>Deeper press</span></div>
       <label class="dose-label" for="speed">Press speed setting<select id="speed"><option value="0.8">Slow</option><option value="1" selected>Steady</option><option value="1.2">Quick</option></select></label>
+      <div class="bottle-scene" id="scene" aria-hidden="true">
+        <div class="spray" id="spray"><div class="mist-cone"></div></div>
+        <div class="device-head"><div class="led-ring"></div><div class="top-button"></div><div class="nozzle"></div><div class="mini-selector"></div></div>
+        <div class="neck"></div><div class="bottle-body"><div class="liquid"></div><div class="dip-tube"></div><span class="bottle-label">EAU<br><small>MODEL NO. 01</small></span></div>
+        <div class="floor-shadow"></div>
+      </div>
+      <p id="spray-feedback" class="spray-feedback" role="status">Hold to see your mist.</p>
+      <p class="small center">Illustrative spray preview · deeper presses create a wider, longer mist.</p>
       <button id="press" class="press-button" aria-describedby="press-help" aria-pressed="false"><span>Hold to mist</span><small>Release to stop</small></button>
       <p id="press-help" class="small center">Mouse or touch: press and hold. Keyboard: focus here and hold Space or Enter. Start depth is 20%.</p>
       <label class="check touch-check"><input id="touch-only" type="checkbox"><span>Touch only, without pressing</span></label>
