@@ -1,5 +1,5 @@
 "use strict";
-const model = new Atomizer();
+let model = new Atomizer();
 const $ = function (id) { return document.getElementById(id); };
 const pressSources = new Set();
 let lastJournal = "";
@@ -7,6 +7,26 @@ let lastMessage = "";
 const pretty = function (value) { return value.replaceAll("_", " ").replace(/^./, function (c) { return c.toUpperCase(); }); };
 function syncPress() { model.setPressed(pressSources.size > 0); render(); }
 function setSource(source, active) { if (active) pressSources.add(source); else pressSources.delete(source); syncPress(); }
+
+$("ready-example").addEventListener("click", function () {
+  releaseAll();
+  const bottle = $("bottle").value;
+  model = new Atomizer();
+  model.configure("bottle", bottle);
+  model.configure("adapter", bottle === "tall" ? "B" : "A");
+  model.configure("tube", bottle === "tall" ? "long" : "short");
+  model.configure("gasket", true);
+  model.configure("pathReady", true);
+  ["adapter", "tube"].forEach(function (key) { $(key).value = model.config[key]; });
+  $("gasket").checked = $("path-ready").checked = true;
+  $("sensor-fault").checked = $("over-limit").checked = false;
+  $("dose").value = String(model.selectedDose);
+  $("depth").value = String(model.depth);
+  $("speed").value = String(model.speed);
+  model.attach();
+  model.confirmSetup();
+  render();
+});
 
 ["bottle", "adapter", "tube", "gasket"].forEach(function (key) {
   $(key).addEventListener("change", function (event) {
@@ -75,6 +95,15 @@ function render() {
   $("reset-fault").disabled = !model.faultLatched;
   pressButton.disabled = !model.setupValid || model.faultLatched || !model.attached;
   pressButton.setAttribute("aria-pressed", String(model.pressed));
+  $("setup-help").textContent = model.faultLatched
+    ? "Clear the sensor fault, release all inputs, then reset the fault and confirm setup. Or load a fresh example."
+    : !model.attached ? "Next: select matching parts, check both boxes, then click Attach head."
+    : !model.setupValid ? "Next: click Confirm setup. To correct parts or checks, detach the head first."
+    : "Setup confirmed. Detach the head to change bottles or parts.";
+  $("press-help").textContent = pressButton.disabled
+    ? "Complete setup in step 01, or click Load ready-to-try example to unlock this button."
+    : model.depth < 20 ? "Increase press depth to at least 20%, then press and hold to mist."
+    : "Press and HOLD for longer than a quick click. Release to stop. Keyboard: hold Space or Enter. Start depth is 20%.";
   $("depth-value").textContent = model.depth + "%";
   $("state-badge").textContent = pretty(model.state);
   $("state-badge").className = "badge" + (model.state === "atomizing" ? " active" : "") + (model.state === "fault" ? " fault" : "");

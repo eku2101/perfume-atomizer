@@ -15,6 +15,8 @@
     <aside class="panel setup-panel">
       <div class="section-heading"><span class="step">01</span><h2>Fit the head</h2></div>
       <p class="muted">Choose the parts while detached. Adapter A and B are illustrative model options.</p>
+      <button id="ready-example" class="button secondary" type="button">Load ready-to-try example</button>
+      <p class="small">Sets up a fresh simulation using matching parts for your selected bottle. Then press and hold “Hold to mist.”</p>
       <fieldset id="parts"><legend class="sr-only">Bottle and attachment parts</legend>
         <label for="bottle">Bottle shape<select id="bottle"><option value="round">Round perfume · adapter A · short tube</option><option value="tall">Tall cologne · adapter B · long tube</option></select></label>
         <div class="two-fields"><label for="adapter">Neck adapter<select id="adapter"><option value="A">Adapter A</option><option value="B">Adapter B</option></select></label><label for="tube">Dip tube<select id="tube"><option value="short">Short</option><option value="long">Long</option></select></label></div>
@@ -23,6 +25,7 @@
       </fieldset>
       <button id="attachment" class="button secondary">Attach head</button>
       <button id="confirm" class="button primary" disabled>Confirm setup</button>
+      <p id="setup-help" class="small" role="status"></p>
       <p class="small">The attachment signal does not prove a seal. Here, those physical checks are represented by your confirmations.</p>
     </aside>
     <section class="panel experience">
